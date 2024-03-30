@@ -1,5 +1,6 @@
 import pandas as pd   
 from flask import Flask, render_template, request, session
+from flask import send_file
 
 app = Flask(__name__)   
 app.secret_key = 'bigbootybaby'
@@ -41,5 +42,9 @@ def merge_files():
     
     return render_template('upload.html', headers=list(headers_set), filename=merged_filename) 
           
+@app.route('/download/<filename>', methods=['GET'])
+def download_file(filename):
+    return send_file(filename, as_attachment=True)
+
 if __name__ == '__main__':     
     app.run(debug=True)
