@@ -9,7 +9,6 @@
         body {
             font-family: 'Arial', sans-serif;
             background-color: #f7f7f7;
-            background: linear-gradient(to right, #0099ff, #66ccff);
             margin: 0;
             padding: 0;
             display: flex;
@@ -22,15 +21,14 @@
             text-align: center;
             padding: 20px;
             background-color: #fff;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
         }
 
         h1 {
-            font-family: 'Roboto', sans-serif;
             color: #333;
-            font-size: 42px;
-            margin-bottom: 30px;
+            font-size: 36px;
+            margin-bottom: 20px;
         }
 
         form {
@@ -38,18 +36,16 @@
         }
 
         input[type="file"] {
-            padding: 15px;
+            padding: 10px;
             margin-bottom: 10px;
             border: 1px solid #ccc;
             border-radius: 5px;
             font-size: 16px;
             width: 100%;
             box-sizing: border-box;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
 
         input[type="submit"] {
-            background: linear-gradient(to right, #0055cc, #00aaff);
             background-color: #4CAF50;
             color: white;
             padding: 12px 20px;
@@ -61,14 +57,13 @@
         }
 
         input[type="submit"]:hover {
-            background: linear-gradient(to right, #00aaff, #0055cc);
+            background-color: #45a049;
         }
 
         h2 {
-            font-family: 'Roboto', sans-serif;
             color: #333;
-            font-size: 28px;
-            margin-bottom: 15px;
+            font-size: 24px;
+            margin-bottom: 10px;
         }
 
         ul {
