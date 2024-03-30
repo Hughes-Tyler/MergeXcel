@@ -1,6 +1,6 @@
 import pandas as pd   
-from flask import Flask, render_template, request, session
-from flask import send_file
+from flask import Flask, render_template, request, session, send_file
+import os
 
 app = Flask(__name__)   
 app.secret_key = 'bigbootybaby'
@@ -37,6 +37,9 @@ def merge_files():
     merged_filename = filename if filename else 'merged_file.xlsx'     
     merged_df.to_excel(merged_filename, index=False, engine='openpyxl')  # Specify the engine for writing Excel files
 
+    if not filename.endswith('.xlsx'):  # Ensure the filename has the correct extension
+        filename += '.xlsx'
+
     session['headers'] = list(headers_set)
     session['filename'] = merged_filename
     
@@ -44,7 +47,14 @@ def merge_files():
           
 @app.route('/download/<filename>', methods=['GET'])
 def download_file(filename):
-    return send_file(filename, as_attachment=True)
+    # Ensure the downloaded file has the correct extension
+    if not filename.endswith('.xlsx'):
+        filename += '.xlsx'
+    
+    # Get the full file path
+    file_path = os.path.abspath(filename)
+    
+    return send_file(file_path, as_attachment=True)
 
 if __name__ == '__main__':     
     app.run(debug=True)

@@ -97,7 +97,7 @@
             {% endfor %}
         </ul>
         {% if filename %}
-        <a href="{{ url_for('download_file', filename=filename + '.xlsx') }}" download>Download Merged File</a>
+        <a href="{{ url_for('download_file', filename=filename) }}" download>Download Merged File</a>
         {% endif %}
     </div>
 </body>
