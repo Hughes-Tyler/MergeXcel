@@ -51,25 +51,22 @@ def merge():
     unwanted_headers = ['Selected Headers:', 'Merge Data']
     selected_headers = [header for header in selected_headers if header not in unwanted_headers]
 
-    print('Selected headers:', selected_headers)
-
     # Read the uploaded files from the paths stored in the session
     try:
-        file1_df = pd.read_excel(session['file1_path'])
-        file2_df = pd.read_excel(session['file2_path'])
+        dfs = [pd.read_excel(file_path) for file_path in session['file_paths']]
     except Exception as e:
         return 'Error: Failed to read uploaded files: ' + str(e)
 
-    print('File 1 headers:', file1_df.columns.tolist())
-    print('File 2 headers:', file2_df.columns.tolist())
-
     # Check if the selected headers exist in the dataframes
-    if not set(selected_headers).issubset(file1_df.columns) or not set(selected_headers).issubset(file2_df.columns):
+    if not all(set(selected_headers).issubset(df.columns) for df in dfs):
         return 'Error: One or more selected headers do not exist in the data'
 
-    merged_data = pd.concat([file1_df[selected_headers], file2_df[selected_headers]], ignore_index=True)
+    merged_data = pd.concat([df[selected_headers] for df in dfs], ignore_index=True)
 
-    return merged_data.to_html()
+    # Convert the DataFrame to HTML and return it
+    merged_data_html = merged_data.to_html()
+
+    return render_template('index.html', merged_data_html=merged_data_html)
 
 if __name__ == '__main__':
     app.run(debug=True)

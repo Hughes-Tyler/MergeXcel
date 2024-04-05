@@ -86,7 +86,7 @@
         </form>
     </div>
     <div id="merged-data">
-        <!-- Merged data will be displayed here -->
+        {{ merged_data_html | safe }}
     </div>
     <input type="hidden" id="selected-headers-input" name="selected_headers">
 </body>
