@@ -3,6 +3,39 @@
 
 <head>
     <title>Upload Files</title>
+    <script>
+        function addHeader(header) {
+            var selectedHeadersElement = document.getElementById('selected-headers');
+            var headerButton = document.createElement('button');
+            headerButton.textContent = header;
+            headerButton.onclick = function () {
+                removeFromSelected(header);
+                selectedHeadersElement.removeChild(headerButton);
+                updateSelectedHeaders();
+            };
+            selectedHeadersElement.appendChild(headerButton);
+            updateSelectedHeaders();
+        }
+
+        function removeFromSelected(header) {
+            var selectedHeaders = document.getElementById('selected-headers').children;
+            for (var i = 0; i < selectedHeaders.length; i++) {
+                if (selectedHeaders[i].textContent === header) {
+                    selectedHeaders[i].remove();
+                    return;
+                }
+            }
+        }
+
+        function updateSelectedHeaders() {
+            var selectedHeaders = [];
+            var selectedHeadersButtons = document.getElementById('selected-headers').children;
+            for (var i = 0; i < selectedHeadersButtons.length; i++) {
+                selectedHeaders.push(selectedHeadersButtons[i].textContent);
+            }
+            document.getElementById('selected-headers-input').value = selectedHeaders.join(', ');
+        }
+    </script>
 </head>
 
 <body>
@@ -17,11 +50,16 @@
         <h2>Common Headers:</h2>
         <ul>
             {% for header in common_headers %}
-            <li>{{ header }}</li>
+            <li><button onclick="addHeader('{{ header }}')">{{ header }}</button></li>
             {% endfor %}
         </ul>
         {% endif %}
     </div>
+    <div id="selected-headers">
+        <h2>Selected Headers:</h2>
+        <!-- Selected headers will be displayed here -->
+    </div>
+    <input type="hidden" id="selected-headers-input" name="selected_headers">
 </body>
 
 </html>
