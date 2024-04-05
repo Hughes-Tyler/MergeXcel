@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Upload Files</title>
+</head>
+
+<body>
+    <h1>Upload Files</h1>
+    <form action="/upload" method="POST" enctype="multipart/form-data">
+        <input type="file" name="file1" accept=".xlsx"><br>
+        <input type="file" name="file2" accept=".xlsx"><br>
+        <input type="submit" value="Upload Files">
+    </form>
+    <div id="common-headers">
+        {% if common_headers %}
+        <h2>Common Headers:</h2>
+        <ul>
+            {% for header in common_headers %}
+            <li>{{ header }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+    </div>
+</body>
+
+</html>

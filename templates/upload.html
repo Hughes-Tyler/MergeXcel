@@ -95,15 +95,6 @@
             <br>
             <input type="submit" value="Merge Files">
         </form>
-        <h2>Common Column Headers:</h2>
-        <ul>
-            {% for header in headers %}
-            <li>{{ header }}</li>
-            {% endfor %}
-        </ul>
-        {% if filename %}
-        <a href="{{ url_for('download_file', filename=filename) }}" download>Download Merged File</a>
-        {% endif %}
     </div>
 </body>
 

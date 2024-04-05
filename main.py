@@ -38,6 +38,8 @@ def logout():
     session.pop('username', None)
     return redirect(url_for('landing_page'))
 
+
+
 @app.route('/merge', methods=['POST']) 
 def merge_files():     
     files = request.files.getlist('files[]') 
@@ -45,8 +47,7 @@ def merge_files():
 
     if len(files) < 2:         
         return "Please upload at least 2 files for merging."  
-     
-    
+
     dfs = []     
     headers_set = None    
     for file in files:         
@@ -59,24 +60,45 @@ def merge_files():
 
     if len(headers_set) == 0:         
         return "No common column headers found for merging."       
-        
-    merged_df = pd.concat(dfs, ignore_index=True)      
-    # Filter columns based on the common headers     
-    merged_df = merged_df[[col for col in merged_df.columns if col in headers_set]]       
-
-    merged_filename = filename if filename else 'merged_file.xlsx'     
-    merged_df.to_excel(merged_filename + '.xlsx', index=False, engine='openpyxl')
-
-    if not filename.endswith('.xlsx'):  # Ensure the filename has the correct extension
-        filename += '.xlsx'
 
     session['headers'] = list(headers_set)
-    session['filename'] = merged_filename
-    
-    return render_template('upload.html', headers=list(headers_set), filename=merged_filename) 
-          
+    session['dfs'] = dfs  # Store the dataframes in session
+    session['filename'] = filename if filename else 'merged_file'  # Store the filename in session
+
+    return redirect(url_for('select_columns'))  # Redirect to column selection page
+
+
+
+
+@app.route('/select_columns', methods=['GET', 'POST'])
+def select_columns():
+    if 'username' not in session:
+        return redirect(url_for('landing_page'))  # Redirect to landing page if not logged in
+
+    if request.method == 'POST':
+        selected_columns = request.form.getlist('columns')  # Get the selected columns
+        dfs = session['dfs']
+        merged_df = pd.concat(dfs, ignore_index=True)  
+        merged_df = merged_df[selected_columns]  # Filter columns based on the selected headers
+        merged_filename = session['filename']
+        merged_df.to_excel(merged_filename + '.xlsx', index=False, engine='openpyxl')
+        session['merged_filename'] = merged_filename + '.xlsx'
+        return redirect(url_for('download_file'))  # Redirect to download page
+    else:
+        headers = session['headers']
+        return render_template('select_columns.html', headers=headers)  # Display the common columns for selection
+
+
+@app.route('/download_merged_file')
+def download_merged_file():
+    if 'username' not in session:
+        return redirect(url_for('landing_page'))  # Redirect to landing page if not logged in
+
+    filename = session['merged_filename']
+    return send_file(filename, as_attachment=True)  # Provide the file for download
+
 @app.route('/download/<filename>', methods=['GET'])
-def download_file(filename):
+def download_specific_file(filename):
     # Ensure the downloaded file has the correct extension
     if not filename.endswith('.xlsx'):
         filename += '.xlsx'
@@ -85,6 +107,5 @@ def download_file(filename):
     file_path = os.path.abspath(filename)
     
     return send_file(file_path, as_attachment=True)
-
 if __name__ == '__main__':     
     app.run(debug=True)
