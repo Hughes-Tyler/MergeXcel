@@ -4,9 +4,12 @@ from werkzeug.utils import secure_filename
 import tempfile
 import os
 from flask import session
+from flask import send_file
 
 app = Flask(__name__)
 app.secret_key = 'fuckingpussy'
+
+merged_data = None
 
 @app.route('/')
 def index():
@@ -43,6 +46,8 @@ def upload():
 
 @app.route('/merge', methods=['POST'])
 def merge():
+    global merged_data
+
     # Get the selected headers from the form data
     selected_headers = request.form.get('selected_headers').split(',')
     selected_headers = [header.strip() for header in selected_headers]
@@ -67,6 +72,18 @@ def merge():
     merged_data_html = merged_data.to_html()
 
     return render_template('index.html', merged_data_html=merged_data_html)
+
+@app.route('/download', methods=['GET'])
+def download():
+    global merged_data
+    if merged_data is None:
+        return "No data to download"
+
+    # Write the DataFrame to an Excel file
+    merged_data.to_excel('merged_data.xlsx', index=False)
+
+    # Send the file to the user
+    return send_file('merged_data.xlsx', as_attachment=True)
 
 if __name__ == '__main__':
     app.run(debug=True)
