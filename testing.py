@@ -14,43 +14,32 @@ def index():
 
 @app.route('/upload', methods=['POST'])
 def upload():
-    # Updated file names
-    file1_name = 'file1'
-    file2_name = 'file2'
+    # Get the list of uploaded files
+    files = request.files.getlist('file')
 
-
-    if file1_name not in request.files or file2_name not in request.files:
-        return 'Error: Missing file upload(s)'
-
-    file1 = request.files[file1_name]
-    file2 = request.files[file2_name]
+    if len(files) != 2:
+        return 'Error: You must upload exactly two files'
 
     # Save the uploaded files to a temporary directory
     temp_dir = tempfile.mkdtemp()
-    file1_path = os.path.join(temp_dir, secure_filename(file1.filename))
-    file2_path = os.path.join(temp_dir, secure_filename(file2.filename))
-    file1.save(file1_path)
-    file2.save(file2_path)
+    file_paths = []
+    for file in files:
+        file_path = os.path.join(temp_dir, secure_filename(file.filename))
+        file.save(file_path)
+        file_paths.append(file_path)
 
     # Store the paths to the uploaded files in the session
-    session['file1_path'] = file1_path
-    session['file2_path'] = file2_path
+    session['file_paths'] = file_paths
 
     # Read the uploaded files
     try:
-        file1_df = pd.read_excel(file1_path)
-        file2_df = pd.read_excel(file2_path)
+        dfs = [pd.read_excel(file_path) for file_path in file_paths]
     except Exception as e:
         return 'Error: Failed to read uploaded files: ' + str(e)
 
-    file1_headers = file1_df.columns
-    file2_headers = file2_df.columns
-
-    common_headers = list(set(file1_headers).intersection(file2_headers))
+    common_headers = list(set(dfs[0].columns).intersection(dfs[1].columns))
 
     return render_template('index.html', common_headers=common_headers)
-
-
 
 @app.route('/merge', methods=['POST'])
 def merge():
