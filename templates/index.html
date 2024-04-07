@@ -16,6 +16,15 @@
             };
             selectedHeadersDiv.appendChild(headerButton);
             updateSelectedHeaders();
+
+            // New code to remove the header from the 'Common Headers' section
+            var commonHeadersButtons = document.getElementsByClassName('common-header-button');
+            for (var i = 0; i < commonHeadersButtons.length; i++) {
+                if (commonHeadersButtons[i].textContent === header) {
+                    commonHeadersButtons[i].remove();
+                    break;
+                }
+            }
         }
 
         function updateSelectedHeaders() {
@@ -26,6 +35,7 @@
             }
             document.getElementById('selected-headers-input').value = selectedHeaders.join(',');
         }
+
         function removeHeader(header) {
             var selectedHeaders = document.getElementById('selected-headers').children;
             for (var i = 0; i < selectedHeaders.length; i++) {
@@ -35,11 +45,22 @@
                 }
             }
             updateSelectedHeaders();
-        }
 
+            // New code to add the header back to the 'Common Headers' section
+            var commonHeadersDiv = document.getElementById('common-headers');
+            var headerButton = document.createElement('button');
+            headerButton.textContent = header;
+            headerButton.className = 'common-header-button';  // Add a class to the header buttons
+            headerButton.onclick = function () {
+                addHeader(header);
+            };
+            var li = document.createElement('li');
+            li.appendChild(headerButton);
+            commonHeadersDiv.appendChild(li);
+        }
         function updateSelectedHeaders() {
             var selectedHeaders = [];
-            var selectedHeadersButtons = document.getElementById('selected-headers').children;
+            var selectedHeadersButtons = document.getElementsByClassName('header-button');  // Only gather elements with the 'header-button' class
             for (var i = 0; i < selectedHeadersButtons.length; i++) {
                 selectedHeaders.push(selectedHeadersButtons[i].textContent);
             }
@@ -77,7 +98,8 @@
             <h2>Common Headers:</h2>
             <ul>
                 {% for header in common_headers %}
-                <li><button onclick="addHeader('{{ header }}')">{{ header }}</button></li>
+                <li><button class="common-header-button" onclick="addHeader('{{ header }}')">{{ header }}</button></li>
+
                 {% endfor %}
             </ul>
             {% endif %}
