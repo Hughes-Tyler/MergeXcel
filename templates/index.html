@@ -64,33 +64,40 @@
 </head>
 
 <body>
-    <h1>Upload Files</h1>
-    <form action="/upload" method="POST" enctype="multipart/form-data">
-        <input type="file" name="file" accept=".xlsx" multiple><br>
-        <input type="submit" value="Upload Files">
-    </form>
-    <div id="common-headers">
-        {% if common_headers %}
-        <h2>Common Headers:</h2>
-        <ul>
-            {% for header in common_headers %}
-            <li><button onclick="addHeader('{{ header }}')">{{ header }}</button></li>
-            {% endfor %}
-        </ul>
-        {% endif %}
-    </div>
-    <div id="selected-headers">
-        <h2>Selected Headers:</h2>
-        <!-- Selected headers will be displayed here -->
-        <form action="/merge" method="POST" id="merge-form">
-            <input type="hidden" id="selected-headers-input" name="selected_headers">
-            <button type="submit">Merge Data</button>
+    <div class="container">
+        <h1>Upload Files</h1>
+        <form action="/upload" method="POST" enctype="multipart/form-data">
+            <input type="file" name="file" accept=".xlsx" multiple><br>
+            <div class="button-container">
+                <input type="submit" value="Upload Files">
+            </div>
         </form>
+        <div id="common-headers">
+            {% if common_headers %}
+            <h2>Common Headers:</h2>
+            <ul>
+                {% for header in common_headers %}
+                <li><button onclick="addHeader('{{ header }}')">{{ header }}</button></li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+        </div>
+        <div id="selected-headers">
+            <h2>Selected Headers:</h2>
+            <!-- Selected headers will be displayed here -->
+            <form action="/merge" method="POST" id="merge-form">
+                <input type="hidden" id="selected-headers-input" name="selected_headers">
+                <div class="button-container">
+                    <button type="submit">Merge Data</button>
+                </div>
+            </form>
+        </div>
+        <div id="merged-data">
+            {{ merged_data_html | safe }}
+        </div>
+        <a href="/download" class="btn btn-primary">Download Excel File</a>
     </div>
-    <div id="merged-data">
-        {{ merged_data_html | safe }}
-    </div>
-    <a href="/download" class="btn btn-primary">Download Excel File</a>
 </body>
+
 
 </html>
