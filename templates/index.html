@@ -8,23 +8,24 @@
     <script>
         function addHeader(header) {
             var selectedHeadersDiv = document.getElementById('selected-headers');
-            var headerButton = document.createElement('button');
-            headerButton.textContent = header;
-            headerButton.className = 'header-button';  // Add a class to the header buttons
-            headerButton.onclick = function () {
-                removeHeader(header);
-            };
-            selectedHeadersDiv.appendChild(headerButton);
-            updateSelectedHeaders();
-
-            // New code to remove the header from the 'Common Headers' section
             var commonHeadersButtons = document.getElementsByClassName('common-header-button');
+            var headerLi;
+            var headerButton;
             for (var i = 0; i < commonHeadersButtons.length; i++) {
                 if (commonHeadersButtons[i].textContent === header) {
-                    commonHeadersButtons[i].remove();
+                    headerLi = commonHeadersButtons[i].parentNode;
+                    headerButton = commonHeadersButtons[i];
+                    commonHeadersButtons[i].parentNode.remove();
                     break;
                 }
             }
+
+            headerButton.className = 'header-button';  // Change the class of the header buttons
+            headerButton.onclick = function () {
+                removeHeader(header);
+            };
+            selectedHeadersDiv.appendChild(headerLi);
+            updateSelectedHeaders();
         }
 
         function updateSelectedHeaders() {
@@ -86,13 +87,18 @@
 
 <body>
     <div class="container">
-        <h1>Upload Files</h1>
-        <form action="/upload" method="POST" enctype="multipart/form-data">
-            <input type="file" name="file" accept=".xlsx" multiple><br>
-            <div class="button-container">
-                <input type="submit" value="Upload Files">
-            </div>
-        </form>
+        <!-- Start of new section -->
+        <div class="upload-section">
+            <h1>Upload Files</h1>
+            <form action="/upload" method="POST" enctype="multipart/form-data">
+                <div class="file-input-container">
+                    <input type="file" name="file" accept=".xlsx" multiple>
+                </div>
+                <div class="button-container">
+                    <input type="submit" value="Upload Files">
+                </div>
+            </form>
+        </div>
         <div id="common-headers">
             {% if common_headers %}
             <h2>Common Headers:</h2>

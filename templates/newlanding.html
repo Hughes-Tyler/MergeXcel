@@ -91,6 +91,53 @@
             border-radius: 5px;
             cursor: pointer;
         }
+
+        #login-form {
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 50%;
+            height: 50%;
+            background-color: #f5f5f5;
+            /* Adjust to match your landing page background color */
+            padding: 20px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            z-index: 1000;
+            display: flex;
+            /* Add this to center the form content */
+            flex-direction: column;
+            /* Stack the form content vertically */
+            justify-content: center;
+            /* Center the form content vertically */
+            align-items: center;
+            /* Center the form content horizontally */
+        }
+
+        #login-form form {
+            width: 80%;
+            /* Adjust the width of the form */
+        }
+
+        #login-form label,
+        #login-form input {
+            width: 100%;
+            /* Make the labels and inputs take up the full width of the form */
+            margin-bottom: 10px;
+            /* Add some space below each label and input */
+            font-size: 1.2em;
+            /* Make the text bigger */
+        }
+
+        #login-form input[type="submit"],
+        #cancel-button {
+            width: auto;
+            /* Don't make the buttons take up the full width of the form */
+            margin-top: 10px;
+            /* Add some space above the buttons */
+        }
     </style>
 </head>
 
@@ -99,6 +146,18 @@
     <div class="container">
         <h1 class="title">Say Goodbye to Excel File Merging Hassles</h1>
         <button class="login-button">Login</button>
+
+        <div id="login-form">
+            <form action="/login" method="POST">
+                <label for="username">Username:</label><br>
+                <input type="text" id="username" name="username"><br>
+                <label for="password">Password:</label><br>
+                <input type="password" id="password" name="password"><br>
+                <input type="submit" value="Login">
+            </form>
+            <button id="cancel-button">Cancel</button> <!-- Add a "Cancel" button -->
+        </div>
+
         <div class="section">
             <div class="section-title">Streamline your workflow by merging multiple Excel files into one with the
                 click
@@ -123,6 +182,15 @@
         </div>
     </div>
 
+    <script>
+        document.querySelector('.login-button').addEventListener('click', function () {
+            document.getElementById('login-form').style.display = 'block';
+        });
+
+        document.getElementById('cancel-button').addEventListener('click', function () {
+            document.getElementById('login-form').style.display = 'none';
+        });
+    </script>
 </body>
 
 </html>
