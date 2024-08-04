@@ -1,22 +1,44 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, session, redirect, url_for
 import pandas as pd
 from werkzeug.utils import secure_filename
 import tempfile
 import os
-from flask import session
 from flask import send_file
 
 app = Flask(__name__)
-app.secret_key = 'fuckingpussy'
+app.secret_key = 'your_secret_key'  # Change this to a secure secret key
 
 merged_data = None
 
+# Dummy user for demonstration
+USER_CREDENTIALS = {'username': 'admin', 'password': 'password'}
+
 @app.route('/')
+def landing():
+    return render_template('newlanding.html')
+
+@app.route('/login', methods=['POST'])
+def login():
+    username = request.form['username']
+    password = request.form['password']
+    
+    if username == USER_CREDENTIALS['username'] and password == USER_CREDENTIALS['password']:
+        session['logged_in'] = True
+        return redirect(url_for('index'))
+    else:
+        return 'Invalid credentials, please try again.'
+
+@app.route('/index')
 def index():
+    if not session.get('logged_in'):
+        return redirect(url_for('newlanding'))
     return render_template('index.html')
 
 @app.route('/upload', methods=['POST'])
 def upload():
+    if not session.get('logged_in'):
+        return redirect(url_for('newlanding'))
+
     # Get the list of uploaded files
     files = request.files.getlist('file')
 
@@ -46,6 +68,9 @@ def upload():
 
 @app.route('/merge', methods=['POST'])
 def merge():
+    if not session.get('logged_in'):
+        return redirect(url_for('newlanding'))
+
     global merged_data
 
     # Get the selected headers from the form data
@@ -75,6 +100,9 @@ def merge():
 
 @app.route('/download', methods=['GET'])
 def download():
+    if not session.get('logged_in'):
+        return redirect(url_for('newlanding'))
+
     global merged_data
     if merged_data is None:
         return "No data to download"
