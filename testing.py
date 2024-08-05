@@ -4,9 +4,12 @@ from werkzeug.utils import secure_filename
 import tempfile
 import os
 from flask import send_file
+from dotenv import load_dotenv
+
+load_dotenv()  # Load environment variables from .env file
 
 app = Flask(__name__)
-app.secret_key = 'your_secret_key'  # Change this to a secure secret key
+app.secret_key = os.environ.get('SECRET_KEY')  # Use the secret key from .env
 
 merged_data = None
 
@@ -114,4 +117,4 @@ def download():
     return send_file('merged_data.xlsx', as_attachment=True)
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=False)
