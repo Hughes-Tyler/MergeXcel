@@ -9,9 +9,12 @@
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: #b3e0ff;
-            /* Light blue background */
             margin: 0;
             padding: 0;
+        }
+
+        .blur-background {
+            filter: blur(5px);
         }
 
         .container {
@@ -27,7 +30,6 @@
             text-align: center;
             margin-bottom: 30px;
             font-size: 32px;
-            /* Larger header */
             color: #333;
         }
 
@@ -63,7 +65,6 @@
         .video-container {
             position: relative;
             padding-bottom: 56.25%;
-            /* This is the aspect ratio */
             height: 0;
             overflow: hidden;
         }
@@ -80,7 +81,7 @@
             position: absolute;
             top: 20px;
             right: 20px;
-            background-color: blue;
+            background-color: #007bff;
             color: white;
             border: none;
             padding: 10px 20px;
@@ -94,101 +95,124 @@
 
         #login-form {
             display: none;
-            position: absolute;
+            position: fixed;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            width: 50%;
-            height: 50%;
-            background-color: #f5f5f5;
-            /* Adjust to match your landing page background color */
+            width: 300px;
+            background-color: #ffffff;
             padding: 20px;
-            border-radius: 5px;
+            border-radius: 8px;
             border: 1px solid #ddd;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             z-index: 1000;
-            display: flex;
-            /* Add this to center the form content */
-            flex-direction: column;
-            /* Stack the form content vertically */
-            justify-content: center;
-            /* Center the form content vertically */
-            align-items: center;
-            /* Center the form content horizontally */
         }
 
         #login-form form {
-            width: 80%;
-            /* Adjust the width of the form */
+            width: 100%;
         }
 
-        #login-form label,
+        #login-form label {
+            width: 100%;
+            margin-bottom: 10px;
+            font-size: 1em;
+            color: #333;
+            text-align: center;
+            font-weight: bold;
+            display: block;
+        }
+
         #login-form input {
             width: 100%;
-            /* Make the labels and inputs take up the full width of the form */
             margin-bottom: 10px;
-            /* Add some space below each label and input */
-            font-size: 1.2em;
-            /* Make the text bigger */
+            padding: 10px;
+            font-size: 1em;
+            border: 1px solid #ccc;
+            border-radius: 5px;
         }
 
-        #login-form input[type="submit"],
+        #login-form input[type="submit"] {
+            width: 100%;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px;
+            font-size: 1em;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
         #cancel-button {
-            width: auto;
-            /* Don't make the buttons take up the full width of the form */
+            width: 100%;
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            padding: 10px;
+            font-size: 1em;
+            border-radius: 5px;
+            cursor: pointer;
             margin-top: 10px;
-            /* Add some space above the buttons */
+        }
+
+        #login-form input[type="text"],
+        #login-form input[type="password"] {
+            box-sizing: border-box;
+            /* Ensures padding and border are included in the element's total width and height */
+            padding: 10px;
+            margin-bottom: 10px;
+            width: 100%;
+            /* Subtracting the padding to fit within the 100% width */
         }
     </style>
 </head>
 
 <body>
+    <div class="page-wrapper">
+        <div class="container">
+            <h1 class="title">Say Goodbye to Excel File Merging Hassles</h1>
+            <button class="login-button">Login</button>
 
-    <div class="container">
-        <h1 class="title">Say Goodbye to Excel File Merging Hassles</h1>
-        <button class="login-button">Login</button>
+            <div class="section">
+                <div class="section-title">Streamline your workflow by merging multiple Excel files into one with the
+                    click of a button.</div>
+                <div class="section-content">
+                    💡 Streamline your workflow by merging multiple Excel files into one with the click of a button.
+                </div>
+                <div class="section-content-check">Pay once, use forever</div>
+                <div class="section-content-check">Merge multiple files with the click of a button</div>
+                <div class="section-content-check">Never copy and paste again</div>
 
-        <div id="login-form">
-            <form action="/login" method="POST">
-                <label for="username">Username:</label><br>
-                <input type="text" id="username" name="username"><br>
-                <label for="password">Password:</label><br>
-                <input type="password" id="password" name="password"><br>
-                <input type="submit" value="Login">
-            </form>
-            <button id="cancel-button">Cancel</button> <!-- Add a "Cancel" button -->
-        </div>
+                <h2 class="section-title">📽️ How it's done</h2>
 
-        <div class="section">
-            <div class="section-title">Streamline your workflow by merging multiple Excel files into one with the
-                click
-                of a button.
-            </div>
-            <div class="section-content">
-                💡 Streamline your workflow by merging multiple Excel files into one with the click of a button.
-            </div>
-            <div class="section-content-check">Pay once, use forever</div>
-            <div class="section-content-check">Merge multiple files with the click of a button</div>
-            <div class="section-content-check">Never copy and paste again</div>
-
-            <!-- Add your new header here -->
-            <h2 class="section-title">📽️ How it's done</h2>
-
-            <!-- Embed your YouTube video here -->
-            <div class="video-container">
-                <iframe width="560" height="315" src="https://www.youtube.com/embed/YourVideoID" frameborder="0"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowfullscreen></iframe>
+                <div class="video-container">
+                    <iframe width="560" height="315" src="https://www.youtube.com/embed/YourVideoID" frameborder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowfullscreen></iframe>
+                </div>
             </div>
         </div>
+    </div>
+
+    <div id="login-form">
+        <form action="/login" method="POST">
+            <label for="username">Username</label>
+            <input type="text" id="username" name="username">
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password">
+            <input type="submit" value="Login">
+        </form>
+        <button id="cancel-button">Cancel</button>
     </div>
 
     <script>
         document.querySelector('.login-button').addEventListener('click', function () {
             document.getElementById('login-form').style.display = 'block';
+            document.querySelector('.page-wrapper').classList.add('blur-background');
         });
 
         document.getElementById('cancel-button').addEventListener('click', function () {
             document.getElementById('login-form').style.display = 'none';
+            document.querySelector('.page-wrapper').classList.remove('blur-background');
         });
     </script>
 </body>
