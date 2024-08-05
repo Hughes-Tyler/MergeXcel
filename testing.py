@@ -5,42 +5,68 @@ import tempfile
 import os
 from flask import send_file
 from dotenv import load_dotenv
+from flask_sqlalchemy import SQLAlchemy
 
 load_dotenv()  # Load environment variables from .env file
 
 app = Flask(__name__)
 app.secret_key = os.environ.get('SECRET_KEY')  # Use the secret key from .env
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.db'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+db = SQLAlchemy(app)
+
+class User(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(150), unique=True, nullable=False)
+    password = db.Column(db.String(150), nullable=False)
+
+with app.app_context():
+    db.create_all()
 
 merged_data = None
-
-# Dummy user for demonstration
-USER_CREDENTIALS = {'username': 'admin', 'password': 'password'}
 
 @app.route('/')
 def landing():
     return render_template('newlanding.html')
 
-@app.route('/login', methods=['POST'])
-def login():
-    username = request.form['username']
-    password = request.form['password']
-    
-    if username == USER_CREDENTIALS['username'] and password == USER_CREDENTIALS['password']:
-        session['logged_in'] = True
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+        existing_user = User.query.filter_by(username=username).first()
+        if existing_user:
+            return 'Username already exists!'
+        new_user = User(username=username, password=password)
+        db.session.add(new_user)
+        db.session.commit()
         return redirect(url_for('index'))
-    else:
-        return 'Invalid credentials, please try again.'
+    return render_template('register.html')
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+        user = User.query.filter_by(username=username, password=password).first()
+        if user:
+            session['logged_in'] = True
+            return redirect(url_for('index'))
+        else:
+            return 'Invalid credentials, please try again.'
+    return render_template('login.html')
 
 @app.route('/index')
 def index():
     if not session.get('logged_in'):
-        return redirect(url_for('newlanding'))
+        return redirect(url_for('landing'))
     return render_template('index.html')
 
 @app.route('/upload', methods=['POST'])
 def upload():
     if not session.get('logged_in'):
-        return redirect(url_for('newlanding'))
+        return redirect(url_for('landing'))
 
     # Get the list of uploaded files
     files = request.files.getlist('file')
@@ -72,7 +98,7 @@ def upload():
 @app.route('/merge', methods=['POST'])
 def merge():
     if not session.get('logged_in'):
-        return redirect(url_for('newlanding'))
+        return redirect(url_for('landing'))
 
     global merged_data
 
@@ -104,7 +130,7 @@ def merge():
 @app.route('/download', methods=['GET'])
 def download():
     if not session.get('logged_in'):
-        return redirect(url_for('newlanding'))
+        return redirect(url_for('landing'))
 
     global merged_data
     if merged_data is None:
@@ -117,4 +143,4 @@ def download():
     return send_file('merged_data.xlsx', as_attachment=True)
 
 if __name__ == '__main__':
-    app.run(debug=False)
+    app.run(debug=True)
